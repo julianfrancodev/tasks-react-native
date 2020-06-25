@@ -34,6 +34,9 @@ const App = () => {
           <Stack.Screen
             name='Create'
             component={CreateAccount}
+            options={{
+              headerShown:false
+            }}
           />
         </Stack.Navigator>
 
