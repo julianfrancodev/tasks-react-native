@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView,Image } from 'react-native';
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Image, TouchableOpacity } from 'react-native';
 
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -11,13 +11,22 @@ const Icon = createIconSetFromFontello(config);
 
 
 export default function Login(props) {
+
+    const [email, setemail] = useState('');
+    const [password, setpassword] = useState('');
+
+
+    const authUser = () => [
+        console.log('auth User')
+    ]
+
     return (
         <>
             <KeyboardAvoidingView style={styles.container}>
 
                 <View style={styles.headerContainer}>
                     <Image
-                        style={{width: 200, height:200,borderRadius:100}}
+                        style={{ width: 200, height: 200, borderRadius: 100 }}
                         source={require('../assets/img/illustration-art-3.jpg')}
                     />
                 </View>
@@ -27,11 +36,13 @@ export default function Login(props) {
                         <TextInput
                             style={styles.inputStyle}
                             placeholder="Email"
+                            value={email}
+                            onChangeText={(text) => setemail(text)}
                         />
                         <Icon
                             name={'user-outline'}
                             size={22}
-                            style={{ marginTop: 15, marginLeft: 190 }}
+                            style={{ marginTop: 15, marginLeft: 260,position: 'absolute' }}
                             color={'#9ebd13'}
                         />
                     </View>
@@ -40,36 +51,40 @@ export default function Login(props) {
                         <TextInput
                             style={styles.inputStyle}
                             placeholder="Password"
+                            value={password}
+                            onChangeText={(text) => setpassword(text)}
                         />
 
                         <Icon
                             name={'lock'}
                             size={22}
-                            style={{ marginTop: 15, marginLeft: 165 }}
+                            style={{ marginTop: 15,marginLeft: 260,position: 'absolute' }}
                             color={'#008552'}
                         />
                     </View>
                 </View>
 
-                <LinearGradient style={styles.linearGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#9ebd13', '#008552']}>
-                    <View style={styles.gradientContent}>
-                        <Text style={styles.buttonText}>
-                            Sign in
+                <TouchableOpacity onPress={() => authUser()}>
+                    <LinearGradient style={styles.linearGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#9ebd13', '#008552']}>
+                        <View style={styles.gradientContent}>
+                            <Text style={styles.buttonText}>
+                                Sign in
                         </Text>
 
-                        <Icon
-                            name={'right'}
-                            size={16}
-                            color={'#fff'}
-                            style={styles.iconStyle}
-                        />
-                    </View>
-                </LinearGradient>
+                            <Icon
+                                name={'right'}
+                                size={16}
+                                color={'#fff'}
+                                style={styles.iconStyle}
+                            />
+                        </View>
+                    </LinearGradient>
+                </TouchableOpacity>
 
                 <View style={styles.footerContainer}>
                     <Text style={{ fontWeight: 'bold' }}>
                         You don't have an account
-                        <Text onPress={()=> props.navigation.navigate('Create')} style={{ fontWeight: 'bold', color: '#9ebd13' }}> Sign Up </Text>
+                        <Text onPress={() => props.navigation.navigate('Create')} style={{ fontWeight: 'bold', color: '#9ebd13' }}> Sign Up </Text>
                     </Text>
                 </View>
 
