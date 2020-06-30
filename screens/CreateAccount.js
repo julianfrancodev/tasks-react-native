@@ -40,7 +40,6 @@ export default function CreateAccount(props) {
     const [createUser] = useMutation(CREATE_USER);
 
     const createAccount = async () => {
-        console.log("Creating account")
 
         if (name.trim() === '' || email.trim() === '' || password.trim() === '') {
             Alert.alert(

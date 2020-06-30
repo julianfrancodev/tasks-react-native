@@ -12,6 +12,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Components
 import Login from './screens/Login';
 import CreateAccount from './screens/CreateAccount';
+import Projects from './screens/Projects';
+import FormProject from './screens/FormProject';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +29,7 @@ const App = () => {
             name='Login'
             component={Login}
             options={{
-              headerShown:false
+              headerShown: false
             }}
           />
 
@@ -35,7 +37,24 @@ const App = () => {
             name='Create'
             component={CreateAccount}
             options={{
-              headerShown:false
+              headerShown: false
+            }}
+          />
+
+          <Stack.Screen
+            name='Projects'
+            component={Projects}
+            options={{
+              headerShown: false
+            }}
+          />
+
+
+          <Stack.Screen
+            name='Form'
+            component={FormProject}
+            options={{
+              headerShown: false
             }}
           />
         </Stack.Navigator>

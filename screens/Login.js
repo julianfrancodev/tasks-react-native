@@ -1,13 +1,34 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Image, TouchableOpacity } from 'react-native';
-
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    KeyboardAvoidingView,
+    Image,
+    TouchableOpacity,
+    Alert
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-community/async-storage';
 
-
+// Icons
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 import config from '../theme/fonts/config.json';
-
 const Icon = createIconSetFromFontello(config);
+
+
+// Apollo
+
+import { gql, useMutation } from '@apollo/client';
+
+const AUTH_USER = gql`
+mutation authUser($input:AuthUserInput!){
+    authUser(input:$input){
+      token
+    }
+  }
+`;
 
 
 export default function Login(props) {
@@ -15,10 +36,60 @@ export default function Login(props) {
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
 
+    const [authUser] = useMutation(AUTH_USER);
 
-    const authUser = () => [
+
+    const handleAuthUser = async () => {
         console.log('auth User')
-    ]
+
+        if (email.trim() === '' || password.trim() === '') {
+            Alert.alert(
+                "Warning",
+                "All Fields Are Required!",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    { text: "OK" }
+                ],
+                { cancelable: false }
+            );
+            return;
+        }
+
+        try {
+            const {data} = await authUser({
+                variables:{
+                    input:{
+                        email,
+                        password
+                    }
+                }
+            });
+
+            const {token} = data.authUser;
+
+            await AsyncStorage.setItem('token',token);
+
+            props.navigation.navigate('Projects');
+
+        } catch (error) {
+            console.log(error.message);
+            Alert.alert(
+                "Error Creating Account",
+                `${error.message}`,
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    { text: "OK" }
+                ],
+                { cancelable: false }
+            );
+        }
+    }
 
     return (
         <>
@@ -42,7 +113,7 @@ export default function Login(props) {
                         <Icon
                             name={'user-outline'}
                             size={22}
-                            style={{ marginTop: 15, marginLeft: 260,position: 'absolute' }}
+                            style={{ marginTop: 15, marginLeft: 260, position: 'absolute' }}
                             color={'#9ebd13'}
                         />
                     </View>
@@ -58,13 +129,13 @@ export default function Login(props) {
                         <Icon
                             name={'lock'}
                             size={22}
-                            style={{ marginTop: 15,marginLeft: 260,position: 'absolute' }}
+                            style={{ marginTop: 15, marginLeft: 260, position: 'absolute' }}
                             color={'#008552'}
                         />
                     </View>
                 </View>
 
-                <TouchableOpacity onPress={() => authUser()}>
+                <TouchableOpacity onPress={() => handleAuthUser()}>
                     <LinearGradient style={styles.linearGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#9ebd13', '#008552']}>
                         <View style={styles.gradientContent}>
                             <Text style={styles.buttonText}>
