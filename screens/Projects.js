@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {gql, useQuery} from '@apollo/client';
 
 
 export default function Projects(props) {
