@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {gql, useQuery} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+import ProjectDetail from './ProjectDetail';
+
+const GET_ALL_PROJECTS = gql`
+query getAllProjects{
+    getAllProjects{
+      id
+      name
+      createdAt
+    }
+  }
+`;
 
 
 export default function Projects(props) {
@@ -10,6 +21,12 @@ export default function Projects(props) {
     const handleCreateProject = () => {
         props.navigation.navigate('Form');
     }
+
+    const [projects, setprojects] = useState([]);
+
+    const { data, loading, error } = useQuery(GET_ALL_PROJECTS);
+
+
 
 
     return (
@@ -30,9 +47,18 @@ export default function Projects(props) {
 
                 <View style={styles.titleStyle}>
                     <Text style={styles.textStyle}>
-                       Selecciona un proyecto
+                        Selecciona un proyecto
                     </Text>
                 </View>
+
+                {loading ? (<Text>Loading</Text>) : (
+                    <FlatList
+                        data={data.getAllProjects}
+                        renderItem={({ item }) => <ProjectDetail name={item.name} />}
+                        keyExtractor={item => item.id}
+                    />
+                )}
+
             </View>
         </>
     )
@@ -69,7 +95,8 @@ const styles = StyleSheet.create({
 
     },
     titleStyle: {
-        marginTop: 20
+        marginTop: 20,
+        marginBottom: 20
     },
     textStyle: {
         fontSize: 22,

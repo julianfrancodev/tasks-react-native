@@ -13,11 +13,31 @@ mutation createProject($input:ProjectInput!){
   }
 `;
 
+
+const GET_ALL_PROJECTS = gql`
+query getAllProjects{
+    getAllProjects{
+      id
+      name
+      createdAt
+    }
+  }
+`;
+
+
 export default function FormProject(props) {
 
     const [project, setproject] = useState('');
 
-    const [createProject] = useMutation(CREATE_PROJECT);
+    const [createProject] = useMutation(CREATE_PROJECT,{
+        update(cache, {data:{createProject}}){
+            const {getAllProjects} = cache.readQuery({query: GET_ALL_PROJECTS});
+            cache.writeQuery({
+                query:GET_ALL_PROJECTS,
+                data:{getAllProjects: getAllProjects.concat([createProject])}
+            })
+        }
+    });
 
     const handleProject = async () => {
 
