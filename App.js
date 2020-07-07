@@ -14,6 +14,8 @@ import Login from './screens/Login';
 import CreateAccount from './screens/CreateAccount';
 import Projects from './screens/Projects';
 import FormProject from './screens/FormProject';
+import CreateToDo from './screens/CreateToDo';
+import ProjectDetail from './screens/ProjectDetail';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +55,15 @@ const App = () => {
           <Stack.Screen
             name='Form'
             component={FormProject}
+            options={{
+              headerShown: false
+            }}
+          />
+
+        
+          <Stack.Screen
+            name='CreateToDo'
+            component={CreateToDo}
             options={{
               headerShown: false
             }}

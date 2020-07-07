@@ -54,7 +54,7 @@ export default function Projects(props) {
                 {loading ? (<Text>Loading</Text>) : (
                     <FlatList
                         data={data.getAllProjects}
-                        renderItem={({ item }) => <ProjectDetail name={item.name} />}
+                        renderItem={({ item }) => <ProjectDetail {...props} name={item.name}/>}
                         keyExtractor={item => item.id}
                     />
                 )}
