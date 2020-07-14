@@ -2,10 +2,9 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ProjectDetail(props) {
-    console.log(props)
     return (
         <>
-            <TouchableOpacity onPress={()=> props.navigation.navigate("CreateToDo",props.name)}>
+            <TouchableOpacity onPress={()=> props.navigation.navigate("CreateToDo",props.id)}>
                 <View style={styles.cardContainer}>
                     <Text style={styles.textStyles}>
                         {props.name}

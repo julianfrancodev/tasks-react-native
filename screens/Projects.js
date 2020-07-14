@@ -27,8 +27,6 @@ export default function Projects(props) {
     const { data, loading, error } = useQuery(GET_ALL_PROJECTS);
 
 
-
-
     return (
         <>
             <View style={styles.container}>
@@ -54,7 +52,7 @@ export default function Projects(props) {
                 {loading ? (<Text>Loading</Text>) : (
                     <FlatList
                         data={data.getAllProjects}
-                        renderItem={({ item }) => <ProjectDetail {...props} name={item.name}/>}
+                        renderItem={({ item }) => <ProjectDetail {...props} name={item.name} id={item.id}/>}
                         keyExtractor={item => item.id}
                     />
                 )}

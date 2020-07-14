@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useMutation, gql } from '@apollo/client';
 
@@ -29,20 +29,23 @@ query getAllToDo{
 
 
 export default function CreateToDo(props) {
-
+    const {params} = props.route;
+    console.log(params);
     const [work, setwork] = useState('');
 
-    const [createToDo] = useMutation(CREATE_TODO,{
-        update(cache, {data:{createProject}}){
-            const {getAllToDo} = cache.readQuery({query: GET_ALL_TODOS});
-            cache.writeQuery({
-                query:GET_ALL_PROJECTS,
-                data:{getAllProjects: getAllToDo.concat([createToDo])}
-            })
-        }
-    });
+    const [createToDo] = useMutation(CREATE_TODO);
 
-    const handleProject = async () => {
+    // const [createToDo] = useMutation(CREATE_TODO,{
+    //     update(cache, {data:{createToDo}}){
+    //         const {getAllToDo} = cache.readQuery({query: GET_ALL_TODOS});
+    //         cache.writeFragment({
+    //             query:GET_ALL_TODOS,
+    //             data:{getAllToDo: getAllToDo.concat([createToDo])}
+    //         })
+    //     }
+    // });
+
+    const handleTodo = async () => {
 
         if (work.trim() === '') {
 
@@ -63,7 +66,9 @@ export default function CreateToDo(props) {
             const { data } = await createToDo({
                 variables: {
                     input: {
-                        name: project
+                        name: work,
+                        project:params,
+                        status:false
                     }
                 }
             });
@@ -97,14 +102,6 @@ export default function CreateToDo(props) {
         <>
             <KeyboardAvoidingView style={styles.container}>
 
-                <View style={styles.headerContainer}>
-                    <Image
-                        style={{ width: 200, height: 200, borderRadius: 100 }}
-                        source={require('../assets/img/projectiamge.jpg')}
-                    />
-                </View>
-
-
                 <View style={styles.formContainer}>
 
                     <View style={styles.inputContainer}>
@@ -119,7 +116,7 @@ export default function CreateToDo(props) {
 
 
                 </View>
-                <TouchableOpacity onPress={() => handleProject()}>
+                <TouchableOpacity onPress={() => handleTodo()}>
                     <LinearGradient style={styles.linearGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#9ebd13', '#008552']}>
                         <View style={styles.gradientContent}>
                             <Text style={styles.buttonText}>
@@ -138,7 +135,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
     },
     buttonText: {
         fontSize: 18,
@@ -165,7 +161,8 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     formContainer: {
-        marginBottom: 10
+        marginBottom: 5,
+        marginTop:40
     },
     inputStyle: {
         height: 50,
