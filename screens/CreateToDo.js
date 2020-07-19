@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation, gql, useQuery } from '@apollo/client';
+import WorkList from '../components/WorkList';
 
 const CREATE_TODO = gql`
 mutation createToDo($input:ToDoInput!){
@@ -29,11 +30,13 @@ query getAllToDo{
 
 
 export default function CreateToDo(props) {
-    const {params} = props.route;
+    const { params } = props.route;
     console.log(params);
     const [work, setwork] = useState('');
 
     const [createToDo] = useMutation(CREATE_TODO);
+
+    const { data, loading, error } = useQuery(GET_ALL_TODOS);
 
     // const [createToDo] = useMutation(CREATE_TODO,{
     //     update(cache, {data:{createToDo}}){
@@ -67,8 +70,8 @@ export default function CreateToDo(props) {
                 variables: {
                     input: {
                         name: work,
-                        project:params,
-                        status:false
+                        project: params,
+                        status: false
                     }
                 }
             });
@@ -100,7 +103,7 @@ export default function CreateToDo(props) {
 
     return (
         <>
-            <KeyboardAvoidingView style={styles.container}>
+            <View style={styles.container}>
 
                 <View style={styles.formContainer}>
 
@@ -126,7 +129,17 @@ export default function CreateToDo(props) {
                     </LinearGradient>
                 </TouchableOpacity>
 
-            </KeyboardAvoidingView>
+                {loading ? (<Text>Loading</Text>) : (
+                    <FlatList
+                        data={data.getAllToDo}
+                        renderItem={({ item }) => <WorkList {...props} name={item.name} id={item.id} />}
+                        keyExtractor={item => item.id}
+                    />
+                )}
+
+                {console.log(data)}
+
+            </View>
         </>
     )
 }
@@ -162,7 +175,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         marginBottom: 5,
-        marginTop:40
+        marginTop: 40
     },
     inputStyle: {
         height: 50,
