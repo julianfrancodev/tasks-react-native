@@ -17,8 +17,8 @@ mutation createToDo($input:ToDoInput!){
 
 
 const GET_ALL_TODOS = gql`
-query getAllToDo{
-    getAllToDo{
+query getAllToDo($id:ID!){
+    getAllToDo(id:$id){
       id
       name
       creator
@@ -36,8 +36,12 @@ export default function CreateToDo(props) {
 
     const [createToDo] = useMutation(CREATE_TODO);
 
-    const { data, loading, error } = useQuery(GET_ALL_TODOS);
 
+    const { data, loading, error } = useQuery(GET_ALL_TODOS, {
+        variables: {
+            id: params
+        }
+    })
     // const [createToDo] = useMutation(CREATE_TODO,{
     //     update(cache, {data:{createToDo}}){
     //         const {getAllToDo} = cache.readQuery({query: GET_ALL_TODOS});
@@ -47,6 +51,7 @@ export default function CreateToDo(props) {
     //         })
     //     }
     // });
+    
 
     const handleTodo = async () => {
 
