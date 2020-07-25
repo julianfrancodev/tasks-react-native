@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useMutation, gql, useQuery } from '@apollo/client';
 import WorkList from '../components/WorkList';
 
+
+
 const CREATE_TODO = gql`
 mutation createToDo($input:ToDoInput!){
     createToDo(input:$input){
@@ -137,7 +139,7 @@ export default function CreateToDo(props) {
                 {loading ? (<Text>Loading</Text>) : (
                     <FlatList
                         data={data.getAllToDo}
-                        renderItem={({ item }) => <WorkList {...props} name={item.name} id={item.id} />}
+                        renderItem={({ item }) => <WorkList {...props} status={item.status} name={item.name} id={item.id} />}
                         keyExtractor={item => item.id}
                     />
                 )}
